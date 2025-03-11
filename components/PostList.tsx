@@ -29,7 +29,7 @@ const PostList = () => {
   };
 
   return (
-    <div>
+    <div className="mt-5">
       <Input
         placeholder="Search posts by title"
         onChange={(e) => handleSearch(e.target.value)}

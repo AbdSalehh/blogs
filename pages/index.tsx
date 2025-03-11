@@ -35,7 +35,9 @@ export default function Home() {
         open={isDialogVisible}
         onClose={() => setIsDialogVisible(false)}
       />
-      <Link href="/create">Create New Post</Link>
+      <Link href="/create" className="font-bold py-6 px-2 text-lg rounded-md">
+        Create New Post
+      </Link>
       {isLoading ? <Spin size="large" /> : <PostList />}
     </div>
   );
