@@ -17,6 +17,10 @@ function App({ Component, pageProps }: AppProps) {
           font-family: ${plusJakartaSans.style.fontFamily} !important;
         }
 
+        body {
+          background-color: white !important;
+        }
+
         div {
           font-family: ${plusJakartaSans.style.fontFamily} !important;
         }

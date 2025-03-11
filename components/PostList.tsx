@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Input, Card, Spin, Pagination, Flex, Layout, Modal } from "antd";
+import { useState } from "react";
+import { Input, Card, Spin, Pagination, Modal } from "antd";
 import { useDeletePost, usePosts } from "../hooks/usePosts";
 import Link from "next/link";
 import debounce from "lodash.debounce";
@@ -15,6 +15,10 @@ const PostList = () => {
   const handleSearch = debounce((value) => {
     setSearchTerm(value);
   }, 500);
+
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
 
   const handleDelete = (id: number) => {
     Modal.confirm({
@@ -40,19 +44,36 @@ const PostList = () => {
               <Card
                 key={post.id}
                 title={post.title}
-                style={{ marginBottom: 10 }}
+                className="mb-3 gap-3 flex-col justify-between relative"
               >
-                <p>{post.body}</p>
-                <Link href={`/post/${post.id}`}>Read More</Link>
-                <Link href={`/edit/${post.id}`}>Edit</Link>
-                <button onClick={() => handleDelete(post.id)}>Delete</button>
+                <p className="pb-5">{post.body}</p>
+                <div className="flex justify-end items-end gap-4 absolute bottom-2 right-0">
+                  <Link
+                    className="text-blue-500 px-4 py-1 rounded-md font-medium"
+                    href={`/post/${post.id}`}
+                  >
+                    Read More
+                  </Link>
+                  <Link
+                    className="text-orange-500 px-4 py-1 rounded-md font-medium"
+                    href={`/edit/${post.id}`}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    className="text-red-500 px-4 py-1 rounded-md font-medium"
+                    onClick={() => handleDelete(post.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </Card>
             ))}
           </div>
           <Pagination
             current={page}
             pageSize={perPage}
-            onChange={(p) => setPage(p)}
+            onChange={(p) => handlePageChange(p)}
             total={posts.meta.pagination.total}
             showSizeChanger={false}
             style={{ marginTop: 20 }}

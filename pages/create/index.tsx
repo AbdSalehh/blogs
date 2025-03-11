@@ -4,10 +4,10 @@ import { useCreatePost } from "@/hooks/usePosts";
 import { useUsers } from "@/hooks/useUsers";
 import { useRouter } from "next/router";
 import WelcomeDialog from "@/components/WelcomeDialog";
+import Head from "next/head";
 
 export default function CreatePost() {
   const router = useRouter();
-  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(true);
   const createPost = useCreatePost();
   const { data: users, isLoading: isLoadingUsers, error } = useUsers();
   const [form] = Form.useForm();
@@ -29,42 +29,58 @@ export default function CreatePost() {
   };
 
   return (
-    <Form form={form} onFinish={handleSubmit} layout="vertical">
-      <Form.Item
-        name="user_id"
-        label="Select User"
-        rules={[{ required: true, message: "User is required!" }]}
-      >
-        <Select loading={isLoadingUsers} placeholder="Select a user">
-          {users?.map((user: any) => (
-            <Select.Option key={user.id} value={user.id}>
-              {user.name} ({user.email})
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+    <>
+      <Head>
+        <title>Create Blog</title>
+        <meta name="description" content="Create a new blog post" key="desc" />
+      </Head>
 
-      <Form.Item
-        name="title"
-        label="title"
-        rules={[{ required: true, message: "Title is required!" }]}
+      <Form
+        form={form}
+        onFinish={handleSubmit}
+        layout="vertical"
+        className="max-w-4xl mx-auto py-10"
       >
-        <Input placeholder="Masukkan judul post" />
-      </Form.Item>
+        <Form.Item
+          name="user_id"
+          label="Select User"
+          rules={[{ required: true, message: "User is required!" }]}
+        >
+          <Select loading={isLoadingUsers} placeholder="Select a user">
+            {users?.map((user: any) => (
+              <Select.Option key={user.id} value={user.id}>
+                {user.name} ({user.email})
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-      <Form.Item
-        name="body"
-        label="title"
-        rules={[{ required: true, message: "Content is required!" }]}
-      >
-        <Input.TextArea rows={4} placeholder="Content of the post" />
-      </Form.Item>
+        <Form.Item
+          name="title"
+          label="Title"
+          rules={[{ required: true, message: "Title is required!" }]}
+        >
+          <Input placeholder="Masukkan judul post" />
+        </Form.Item>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" loading={createPost.isPending}>
-          Create Post
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item
+          name="body"
+          label="Body"
+          rules={[{ required: true, message: "Content is required!" }]}
+        >
+          <Input.TextArea rows={4} placeholder="Content of the post" />
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={createPost.isPending}
+          >
+            Create Post
+          </Button>
+        </Form.Item>
+      </Form>
+    </>
   );
 }

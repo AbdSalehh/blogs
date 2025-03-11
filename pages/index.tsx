@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { usePosts } from "@/hooks/usePosts";
-import { Card, Spin } from "antd";
+import { Spin } from "antd";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import PostList from "@/components/PostList";
+import Head from "next/head";
 
 const WelcomeDialog = dynamic(() => import("../components/WelcomeDialog"), {
   ssr: false,
@@ -21,7 +22,15 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white max-w-4xl mx-auto p-4 text-black">
+      <Head>
+        <title>Home | My Blog</title>
+        <meta
+          name="description"
+          content="A blog created with Next.js and GoREST API"
+          key="desc"
+        />
+      </Head>
       <WelcomeDialog
         open={isDialogVisible}
         onClose={() => setIsDialogVisible(false)}

@@ -4,19 +4,21 @@ import { CreatePostData, Post } from "@/types/Post";
 import { message } from "antd";
 import { useRouter } from "next/router";
 
-export const usePosts = (searchTerm = "", page = 1, perPage = 10) => {
+export const usePosts = (searchTerm = "", page?: number, perPage?: number) => {
   return useQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", { searchTerm, page, perPage }],
     queryFn: async () => {
       try {
-        const response = await api.get(`/posts`, {
-          params: {
-            title: searchTerm,
-            page,
-            per_page: perPage,
-          },
-        });
+        const params: any = {};
 
+        if (searchTerm) {
+          params.title = searchTerm;
+        } else {
+          if (page) params.page = page;
+          if (perPage) params.per_page = perPage;
+        }
+
+        const response = await api.get(`/posts`, { params });
         return response.data;
       } catch (error: any) {
         if (error.response?.status === 401) {
@@ -25,6 +27,7 @@ export const usePosts = (searchTerm = "", page = 1, perPage = 10) => {
         throw error;
       }
     },
+    staleTime: Infinity,
   });
 };
 

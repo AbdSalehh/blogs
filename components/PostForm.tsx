@@ -11,6 +11,7 @@ type Post = {
 
 const PostForm = ({ post }: { post?: Post }) => {
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
   const createPost = useCreatePost();
   const updatePost = useUpdatePost();
   const router = useRouter();
@@ -23,6 +24,7 @@ const PostForm = ({ post }: { post?: Post }) => {
 
   const handleSubmit = async (values: any) => {
     try {
+      setIsLoading(true);
       if (post) {
         await updatePost.mutateAsync({ id: post.id, ...values });
       } else {
@@ -31,6 +33,8 @@ const PostForm = ({ post }: { post?: Post }) => {
       router.push("/");
     } catch (error) {
       message.error("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -38,18 +42,20 @@ const PostForm = ({ post }: { post?: Post }) => {
     <Form form={form} onFinish={handleSubmit} initialValues={post || {}}>
       <Form.Item
         name="title"
+        label="Title"
         rules={[{ required: true, message: "Title is required" }]}
       >
         <Input placeholder="Title" />
       </Form.Item>
       <Form.Item
         name="body"
+        label="Body"
         rules={[{ required: true, message: "Body is required" }]}
       >
         <Input.TextArea placeholder="Body" rows={4} />
       </Form.Item>
-      <Button type="primary" htmlType="submit">
-        Submit
+      <Button type="primary" loading={isLoading} htmlType="submit">
+        {post ? "Update Post" : "Create Post"}
       </Button>
     </Form>
   );

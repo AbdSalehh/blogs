@@ -13,5 +13,6 @@ export const useUsers = () => {
         throw error;
       }
     },
+    staleTime: Infinity,
   });
 };
