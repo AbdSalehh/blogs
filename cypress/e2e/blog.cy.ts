@@ -1,5 +1,7 @@
 describe("Blog CRUD Operations", () => {
   const TOKEN = Cypress.env("GOREST_TOKEN");
+  const TEST_TITLE = 'Test Post Title ' + Date.now();
+  const UPDATED_TITLE = 'Updated Title ' + Date.now();
 
   beforeEach(() => {
     cy.clearLocalStorage();
@@ -15,99 +17,113 @@ describe("Blog CRUD Operations", () => {
     
     cy.contains('span', 'Confirm').click({ force: true });
 
-    cy.get(".ant-modal-content").should("not.exist");
     cy.get("a").contains("Create New Post").should("be.visible");
+    cy.wait(3000);
+    cy.get('.ant-card').should('exist');
+    cy.get('.ant-pagination').should('exist');
   });
 
-  // it('should create new post', () => {
-  //   cy.window().then((win) => {
-  //     win.localStorage.setItem('goRestToken', TOKEN);
-  //   });
-  //   cy.visit('/');
+  it('should create new post', () => {
+    cy.window().then((win) => {
+      win.localStorage.setItem('goRestToken', TOKEN);
+    });
+    cy.visit('/');
 
-  //   cy.get('a').contains('Create New Post').click();
+    cy.get('a').contains('Create New Post').click();
+    cy.wait(2000);
 
-  //   cy.get('select').select('1');
-  //   cy.get('input[placeholder*="title"]').type('Test Post Title');
-  //   cy.get('textarea').type('Test Post Content');
+    cy.get('.ant-select').click();
+    cy.wait(2000);
+    cy.get('.ant-select-item-option').first().click();
+    
+    cy.get('input[placeholder*="Title"]').type(TEST_TITLE);
+    cy.get('textarea').type('Test Post Content');
+    
+    cy.get('button').contains('Create Post').click();
+    cy.get('.ant-message').should('contain', 'Post successfully created');
+  });
 
-  //   cy.get('button').contains('Submit').click();
+  it('should read post details', () => {
+    cy.window().then((win) => {
+      win.localStorage.setItem('goRestToken', TOKEN);
+    });
+    cy.visit('/');
+    cy.wait(2000);
 
-  //   cy.get('.ant-message').should('contain', 'Post successfully created');
-  //   cy.url().should('eq', Cypress.config().baseUrl + '/');
-  // });
+    cy.get('.ant-card-head-title').contains(TEST_TITLE).should('exist');
+    cy.get('a').contains('Read More')
+      .parents('.ant-card')
+      .find('.ant-card-head-title')
+      .contains(TEST_TITLE)
+      .parents('.ant-card')
+      .find('a')
+      .contains('Read More')
+      .click();
 
-  // it('should read post details', () => {
-  //   cy.window().then((win) => {
-  //     win.localStorage.setItem('goRestToken', TOKEN);
-  //   });
-  //   cy.visit('/');
+    cy.wait(2000);
 
-  //   cy.get('.ant-card-head-title').first().click();
+    cy.get('.ant-card-head-title').should('contain', TEST_TITLE);
+    cy.get('button').contains('Back').should('exist');
+    cy.get('strong').contains('Author ID').should('exist');
+  });
 
-  //   cy.get('.ant-card-head-title').should('exist');
-  //   cy.get('.ant-card').should('contain', 'Author ID');
-  // });
+  it('should update post', () => {
+    cy.window().then((win) => {
+      win.localStorage.setItem('goRestToken', TOKEN);
+    });
+    cy.visit('/');
+    cy.wait(2000);
 
-  // it('should update post', () => {
-  //   cy.window().then((win) => {
-  //     win.localStorage.setItem('goRestToken', TOKEN);
-  //   });
-  //   cy.visit('/');
+    cy.get('.ant-card-head-title')
+      .contains(TEST_TITLE)
+      .parents('.ant-card')
+      .find('a')
+      .contains('Edit')
+      .click();
 
-  //   cy.get('button').contains('Edit').first().click();
+    cy.wait(2000);
 
-  //   cy.get('input[placeholder*="title"]').clear().type('Updated Title');
-  //   cy.get('textarea').clear().type('Updated Content');
+    cy.get('input[placeholder*="Title"]').clear().type(UPDATED_TITLE);
+    cy.get('textarea').clear().type('Updated Content');
+    cy.get('button').contains('Update Post').click();
 
-  //   cy.get('button').contains('Update').click();
+    cy.get('.ant-message').should('contain', 'Post updated successfully');
+    cy.get('.ant-card-head-title').contains(UPDATED_TITLE).should('exist');
+  });
 
-  //   cy.get('.ant-message').should('contain', 'Post updated successfully');
-  // });
+  it('should delete post', () => {
+    cy.window().then((win) => {
+      win.localStorage.setItem('goRestToken', TOKEN);
+    });
+    cy.visit('/');
+    cy.wait(2000);
 
-  // it('should delete post', () => {
-  //   // Setup token
-  //   cy.window().then((win) => {
-  //     win.localStorage.setItem('goRestToken', TOKEN);
-  //   });
-  //   cy.visit('/');
+    cy.get('.ant-card').its('length').then((initialCount) => {
+      cy.get('.ant-card-head-title')
+        .contains(UPDATED_TITLE)
+        .parents('.ant-card')
+        .find('button')
+        .contains('Delete')
+        .click();
 
-  //   cy.get('.ant-card').its('length').then((initialCount) => {
-  //     cy.get('button').contains('Delete').first().click();
+      cy.get('.ant-btn-primary').contains('OK').click();
 
-  //     cy.get('.ant-popconfirm-buttons button').contains('Yes').click();
+      cy.get('.ant-message').should('contain', 'Post deleted successfully');
+      cy.get('.ant-card-head-title').contains(UPDATED_TITLE).should('not.exist');
+    });
+  });
 
-  //     cy.get('.ant-message').should('contain', 'Post deleted successfully');
+  it('should handle pagination', () => {
+    cy.window().then((win) => {
+      win.localStorage.setItem('goRestToken', TOKEN);
+    });
+    cy.visit('/');
+    cy.wait(2000);
 
-  //     cy.get('.ant-card').should('have.length', initialCount - 1);
-  //   });
-  // });
+    cy.get('.ant-pagination-item-1').should('have.class', 'ant-pagination-item-active');
 
-  // it('should handle invalid token', () => {
-  //   cy.window().then((win) => {
-  //     win.localStorage.setItem('goRestToken', 'invalid_token');
-  //   });
-  //   cy.visit('/');
+    cy.get('.ant-pagination-next').click();
 
-  //   cy.get('.ant-modal-content').should('be.visible');
-
-  //   cy.get('input[placeholder*="GoRest Token"]').type(TOKEN);
-  //   cy.get('button').contains('Masuk').click();
-
-  //   cy.get('.ant-modal-content').should('not.exist');
-  //   cy.get('a').contains('Create New Post').should('be.visible');
-  // });
-
-  // it('should handle pagination', () => {
-  //   cy.window().then((win) => {
-  //     win.localStorage.setItem('goRestToken', TOKEN);
-  //   });
-  //   cy.visit('/');
-
-  //   cy.get('.ant-pagination-item-1').should('have.class', 'ant-pagination-item-active');
-
-  //   cy.get('.ant-pagination-next').click();
-
-  //   cy.get('.ant-pagination-item-2').should('have.class', 'ant-pagination-item-active');
-  // });
+    cy.get('.ant-pagination-item-2').should('have.class', 'ant-pagination-item-active');
+  });
 });
