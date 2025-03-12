@@ -26,7 +26,7 @@ const WelcomeDialog: React.FC<Props> = ({ open, onClose }) => {
   return (
     <Modal title="Welcome" open={open} footer={null} closable={false}>
       <Input
-        placeholder="Nama"
+        placeholder="Your Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
