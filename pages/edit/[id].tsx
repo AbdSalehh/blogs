@@ -23,7 +23,7 @@ export default function EditPost() {
         <title>{post?.title}</title>
         <meta name="description" content={post?.body} key="desc" />
       </Head>
-      <div className="mx-auto max-w-4xl py-10">
+      <div className="mx-auto max-w-4xl px-2 py-10 lg:px-0">
         <Button onClick={() => router.push("/")} style={{ marginBottom: 10 }}>
           Back
         </Button>
