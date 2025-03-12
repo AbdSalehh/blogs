@@ -60,7 +60,7 @@ export default function CreatePost() {
             label="Title"
             rules={[{ required: true, message: "Title is required!" }]}
           >
-            <Input placeholder="Masukkan judul post" />
+            <Input placeholder="Title of the post" />
           </Form.Item>
 
           <Form.Item
