@@ -36,17 +36,6 @@ export const useCreatePost = () => {
   return useMutation({
     mutationFn: async (newPost: CreatePostData) => {
       try {
-        const token = localStorage.getItem("goRestToken");
-        if (!token) {
-          throw new Error("Token not found");
-        }
-
-        setAuthToken(token);
-
-        if (!newPost.user_id) {
-          throw new Error("User ID required");
-        }
-
         const response = await api.post("/posts", newPost);
         return response.data;
       } catch (error: any) {

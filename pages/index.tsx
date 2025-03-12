@@ -22,7 +22,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-white max-w-4xl mx-auto p-4 text-black">
+    <div className="mx-auto max-w-4xl bg-white p-4 text-black">
       <Head>
         <title>Home | My Blog</title>
         <meta
@@ -35,10 +35,19 @@ export default function Home() {
         open={isDialogVisible}
         onClose={() => setIsDialogVisible(false)}
       />
-      <Link href="/create" className="font-bold py-6 px-2 text-lg rounded-md">
+      <Link
+        href="/create"
+        className="rounded-md border border-blue-700 bg-blue-500 px-6 py-2 text-lg font-bold text-white"
+      >
         Create New Post
       </Link>
-      {isLoading ? <Spin size="large" /> : <PostList />}
+      {isLoading ? (
+        <div className="mt-4 flex w-full items-center justify-center">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <PostList />
+      )}
     </div>
   );
 }

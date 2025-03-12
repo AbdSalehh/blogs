@@ -9,7 +9,12 @@ export default function EditPost() {
   const { id } = router.query;
   const { data: post, isLoading } = usePostDetail(id);
 
-  if (isLoading) return <Spin size="large" />;
+  if (isLoading)
+    return (
+      <div className="mt-10 flex w-full items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
 
   return (
     <>
@@ -17,7 +22,7 @@ export default function EditPost() {
         <title>{post.title}</title>
         <meta name="description" content={post.body} key="desc" />
       </Head>
-      <div className="max-w-4xl mx-auto py-10">
+      <div className="mx-auto max-w-4xl py-10">
         <Button onClick={() => router.push("/")} style={{ marginBottom: 10 }}>
           Back
         </Button>

@@ -36,32 +36,34 @@ const PostList = () => {
         style={{ marginBottom: 10 }}
       />
       {isLoading ? (
-        <Spin size="large" />
+        <div className="mt-4 flex w-full items-center justify-center">
+          <Spin size="large" />
+        </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 text-red-200">
+          <div className="grid grid-cols-1 gap-4 text-red-200 sm:grid-cols-2">
             {posts.data?.map((post: any) => (
               <Card
                 key={post.id}
                 title={post.title}
-                className="mb-3 gap-3 flex-col justify-between relative"
+                className="relative mb-3 flex-col justify-between gap-3"
               >
                 <p className="pb-5">{post.body}</p>
-                <div className="flex justify-end items-end gap-4 absolute bottom-2 right-0">
+                <div className="absolute bottom-2 right-0 flex items-end justify-end gap-4">
                   <Link
-                    className="text-blue-500 px-4 py-1 rounded-md font-medium"
+                    className="rounded-md px-4 py-1 font-medium text-blue-500"
                     href={`/post/${post.id}`}
                   >
                     Read More
                   </Link>
                   <Link
-                    className="text-orange-500 px-4 py-1 rounded-md font-medium"
+                    className="rounded-md px-4 py-1 font-medium text-orange-500"
                     href={`/edit/${post.id}`}
                   >
                     Edit
                   </Link>
                   <button
-                    className="text-red-500 px-4 py-1 rounded-md font-medium"
+                    className="rounded-md px-4 py-1 font-medium text-red-500"
                     onClick={() => handleDelete(post.id)}
                   >
                     Delete

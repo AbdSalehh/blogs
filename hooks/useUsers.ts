@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../utils/api";
-import { message } from "antd";
 
 export const useUsers = () => {
   return useQuery({

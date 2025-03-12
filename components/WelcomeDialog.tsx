@@ -38,7 +38,7 @@ const WelcomeDialog: React.FC<Props> = ({ open, onClose }) => {
       />
       {error && <p style={{ color: "red" }}>{error}</p>}
       <Button type="primary" onClick={handleSubmit} style={{ marginTop: 10 }}>
-        Masuk
+        Confirm
       </Button>
     </Modal>
   );
