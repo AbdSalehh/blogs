@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProps } from "next/app";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "@/styles/globals.css";
 import WelcomeDialog from "@/components/WelcomeDialog";
-import { setModalController } from "@/utils/api";
+import { setShowDialog } from "@/utils/api";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -15,7 +15,14 @@ const queryClient = new QueryClient();
 function App({ Component, pageProps }: AppProps) {
   const [isDialogVisible, setIsDialogVisible] = useState(false);
 
-  setModalController(setIsDialogVisible);
+  useEffect(() => {
+    setShowDialog(() => setIsDialogVisible(true));
+  }, []);
+  
+  const handleDialogClose = () => {
+    setIsDialogVisible(false);
+    queryClient.invalidateQueries();
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -35,7 +42,7 @@ function App({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
       <WelcomeDialog
         open={isDialogVisible}
-        onClose={() => setIsDialogVisible(false)}
+        onClose={handleDialogClose}
       />
     </QueryClientProvider>
   );

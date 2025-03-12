@@ -7,7 +7,7 @@ type Props = {
   onClose: () => void;
 };
 
-const WelcomeDialog: React.FC<Props> = ({ open, onClose }) => {
+function WelcomeDialog({ open, onClose }: Props) {
   const [name, setName] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -54,6 +54,6 @@ const WelcomeDialog: React.FC<Props> = ({ open, onClose }) => {
       </Button>
     </Modal>
   );
-};
+}
 
 export default WelcomeDialog;

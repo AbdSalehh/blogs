@@ -1,9 +1,10 @@
 import axios from "axios";
+import { message } from "antd";
 
-let modalController: ((isOpen: boolean) => void) | null = null;
+let showWelcomeDialog: (() => void) | null = null;
 
-export const setModalController = (controller: (isOpen: boolean) => void) => {
-  modalController = controller;
+export const setShowDialog = (callback: () => void) => {
+  showWelcomeDialog = callback;
 };
 
 export const api = axios.create({
@@ -15,17 +16,19 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("goRestToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (!token && showWelcomeDialog) {
+    showWelcomeDialog();
+    throw new Error("No token");
   }
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      modalController?.(true);
+    if (error.response?.status === 401 && showWelcomeDialog) {
+      showWelcomeDialog();
     }
     return Promise.reject(error);
   },

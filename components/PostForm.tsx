@@ -5,7 +5,12 @@ import { useRouter } from "next/router";
 import { Post } from "@/types/Post";
 import { useUsers } from "@/hooks/useUsers";
 
-const PostForm = ({ post }: { post?: Post }) => {
+interface PostType {
+  post?: Post;
+  action: "create" | "update";
+}
+
+function PostForm({ post, action = "create" }: PostType) {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const createPost = useCreatePost();
@@ -38,7 +43,7 @@ const PostForm = ({ post }: { post?: Post }) => {
 
   return (
     <Form form={form} onFinish={handleSubmit} initialValues={post || {}}>
-      {!post && (
+      {action === "create" && (
         <Form.Item
           name="user_id"
           label="Select User"
@@ -68,10 +73,10 @@ const PostForm = ({ post }: { post?: Post }) => {
         <Input.TextArea placeholder="Body" rows={4} />
       </Form.Item>
       <Button type="primary" loading={isLoading} htmlType="submit">
-        {post ? "Update Post" : "Create Post"}
+        {action === "update" ? "Update Post" : "Create Post"}
       </Button>
     </Form>
   );
-};
+}
 
 export default PostForm;

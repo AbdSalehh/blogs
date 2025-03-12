@@ -97,7 +97,6 @@ export const useDeletePost = () => {
         const response = await api.delete(`/posts/${id}`);
         return response.data;
       } catch (error: any) {
-        message.error("Delete post error:", error);
         throw error;
       }
     },

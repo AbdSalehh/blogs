@@ -4,7 +4,7 @@ import { useDeletePost, usePosts } from "../hooks/usePosts";
 import Link from "next/link";
 import debounce from "lodash.debounce";
 
-const PostList = () => {
+function PostList() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const deletePost = useDeletePost();
@@ -84,6 +84,6 @@ const PostList = () => {
       )}
     </div>
   );
-};
+}
 
 export default PostList;

@@ -18,7 +18,7 @@ export default function CreatePost() {
           Back
         </Button>
         <h1 className="mb-4 text-xl font-bold">Create new post</h1>
-        <PostForm />
+        <PostForm action="create" />
       </div>
     </>
   );
