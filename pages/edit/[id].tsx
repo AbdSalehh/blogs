@@ -9,12 +9,13 @@ export default function EditPost() {
   const { id } = router.query;
   const { data: post, isLoading } = usePostDetail(id);
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <div className="mt-10 flex w-full items-center justify-center">
         <Spin size="large" />
       </div>
     );
+  }
 
   return (
     <>

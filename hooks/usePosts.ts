@@ -1,8 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, setAuthToken } from "../utils/api";
+import { api } from "../utils/api";
 import { CreatePostData, Post } from "@/types/Post";
 import { message } from "antd";
-import { useRouter } from "next/router";
 
 export const usePosts = (searchTerm = "", page?: number, perPage?: number) => {
   return useQuery({
@@ -39,10 +38,6 @@ export const useCreatePost = () => {
         const response = await api.post("/posts", newPost);
         return response.data;
       } catch (error: any) {
-        message.error(
-          "Create post error:",
-          error.response?.data || error.message
-        );
         throw error;
       }
     },
@@ -61,6 +56,10 @@ export const usePostDetail = (id: any) => {
         const response = await api.get(`/posts/${id}`);
         return response.data.data;
       } catch (error: any) {
+        if (error.response?.status === 401) {
+          message.error("Token invalid.");
+        }
+
         throw error;
       }
     },

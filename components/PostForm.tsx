@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
-import { Input, Button, Form, message } from "antd";
+import { Input, Button, Form, message, Select } from "antd";
 import { useCreatePost, useUpdatePost } from "../hooks/usePosts";
 import { useRouter } from "next/router";
-
-type Post = {
-  id: number;
-  title: string;
-  body: string;
-};
+import { Post } from "@/types/Post";
+import { useUsers } from "@/hooks/useUsers";
 
 const PostForm = ({ post }: { post?: Post }) => {
   const [form] = Form.useForm();
@@ -15,6 +11,8 @@ const PostForm = ({ post }: { post?: Post }) => {
   const createPost = useCreatePost();
   const updatePost = useUpdatePost();
   const router = useRouter();
+
+  const { data: users, isLoading: isLoadingUsers } = useUsers();
 
   useEffect(() => {
     if (post) {
@@ -40,6 +38,21 @@ const PostForm = ({ post }: { post?: Post }) => {
 
   return (
     <Form form={form} onFinish={handleSubmit} initialValues={post || {}}>
+      {!post && (
+        <Form.Item
+          name="user_id"
+          label="Select User"
+          rules={[{ required: true, message: "User is required!" }]}
+        >
+          <Select loading={isLoadingUsers} placeholder="Select a user">
+            {users?.map((user: any) => (
+              <Select.Option key={user.id} value={user.id}>
+                {user.name} ({user.email})
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+      )}
       <Form.Item
         name="title"
         label="Title"
