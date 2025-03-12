@@ -35,3 +35,12 @@
 //     }
 //   }
 // }
+
+// Ini adalah file untuk custom commands Cypress
+// Bisa ditambahkan nanti jika diperlukan
+
+declare namespace Cypress {
+  interface Chainable {
+    // Tambahkan custom commands di sini jika diperlukan
+  }
+}
